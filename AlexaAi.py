@@ -27,7 +27,7 @@ client = Client(SESSION_NAME, API_ID, API_HASH)
 
 
 @client.on_message(
-    filters.command("repo", prefixes=["/", ".", "?", "-"])
+    filters.command("repuuuo", prefixes=["/", ".", "?", "-"])
     & ~filters.private)
 async def chatbot(client, message):
     await message.delete()
@@ -64,7 +64,7 @@ IF HAVE ANY QUESTION THEN CONTACT » TO » MY » [OWNER] @Jankari_Ki_Duniya""",
 
 
 @client.on_message(
-    filters.command("alive", prefixes=["/", ".", "?", "-"])
+    filters.command("alivuue", prefixes=["/", ".", "?", "-"])
     & ~filters.private)
 async def start(client, message):
     await message.reply_text(f"**ᴀʟᴇxᴀ ᴀɪ ᴜsᴇʀʙᴏᴛ ғᴏʀ ᴄʜᴀᴛᴛɪɴɢ ɪs ᴡᴏʀᴋɪɴɢ**")
