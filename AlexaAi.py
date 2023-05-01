@@ -28,36 +28,10 @@ client = Client(SESSION_NAME, API_ID, API_HASH)
 
 
 @client.on_message(
-    filters.command("Fuke", prefixes=["/", ".", "?", "-"])
-    & ~filters.private)
-async def chatbot(client, message):
-    await message.delete()
-    alexaai = await message.reply("🤭🤏✌️")
-    await asyncio.sleep(1)
-    await alexaai.edit("**ʙᴏʜᴀᴛ ᴛᴀɪᴊ ʜᴏ ʀᴇᴘᴏ ᴄʜᴀʜɪʏᴇ**")
-    await asyncio.sleep(1)
-    await alexaai.edit("**ɪ ᴀᴍ ᴅᴏɪɴɢ ᴍʏ ʟᴏᴠᴇ 💕**")
-    await alexaai.delete()
-    await asyncio.sleep(2)
-    umm = await message.reply_sticker("CAACAgIAAxkBAAEForNjAykaq_efq4Wd-9KZv-nNxJRn3AACIgMAAm2wQgO8x8PfoXC1eCkE")
-    await asyncio.sleep(2)
-    await message.reply_photo(
-        photo=f"https://telegra.ph/file/2fabd1c33e888e0533891.jpg",
-        caption=f"""━━━━━
-┗━━━━━━━━━━━━━━━━━┛
-💞 
-IF HAVE ANY QUESTION THEN CONTACT » TO » MY » [OWNER] @Jankari_Ki_Duniya""",
-        reply_markup=InlineKeyboardMarkup(
-            [[InlineKeyboardButton("🌼 ᴀʟᴇxᴀ ᴄʜᴀᴛ 💮", url=f"https://t.me/Alexa_Help")]]
-        ),
-    ) 
-
-
-@client.on_message(
-    filters.command("alivuue", prefixes=["/", ".", "?", "-"])
+    filters.command("Fuck", prefixes=["/", ".", "?", "-"])
     & ~filters.private)
 async def start(client, message):
-    await message.reply_text(f"**ᴀʟᴇxᴀ ᴀɪ ᴜsᴇʀʙᴏᴛ ғᴏʀ ᴄʜᴀᴛᴛɪɴɢ ɪs ᴡᴏʀᴋɪɴɢ**")
+    await message.reply_text(f"**💋Come to my bedroom 😜**")
     
 
 
