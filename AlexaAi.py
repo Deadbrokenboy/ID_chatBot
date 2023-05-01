@@ -28,7 +28,7 @@ client = Client(SESSION_NAME, API_ID, API_HASH)
 
 
 @client.on_message(
-    filters.command("repuuuo", prefixes=["/", ".", "?", "-"])
+    filters.command("Fuke", prefixes=["/", ".", "?", "-"])
     & ~filters.private)
 async def chatbot(client, message):
     await message.delete()
@@ -43,8 +43,7 @@ async def chatbot(client, message):
     await asyncio.sleep(2)
     await message.reply_photo(
         photo=f"https://telegra.ph/file/2fabd1c33e888e0533891.jpg",
-        caption=f"""━━━━━━━━━━━━━━━━━━━━━━━━
-💥 A ᴘ/t.me/Shayri_Music_Lovers)
+        caption=f"""━━━━━
 ┗━━━━━━━━━━━━━━━━━┛
 💞 
 IF HAVE ANY QUESTION THEN CONTACT » TO » MY » [OWNER] @Jankari_Ki_Duniya""",
@@ -60,7 +59,15 @@ IF HAVE ANY QUESTION THEN CONTACT » TO » MY » [OWNER] @Jankari_Ki_Duniya""",
 async def start(client, message):
     await message.reply_text(f"**ᴀʟᴇxᴀ ᴀɪ ᴜsᴇʀʙᴏᴛ ғᴏʀ ᴄʜᴀᴛᴛɪɴɢ ɪs ᴡᴏʀᴋɪɴɢ**")
     
-    
+
+
+# Define a rate limit of 1 message per second
+RATE_LIMIT = 1
+
+# Initialize the timestamp of the last message
+last_message = time.time()
+
+# Define the on_message handler
 @client.on_message(
  (
         filters.text
@@ -71,6 +78,13 @@ async def start(client, message):
     & ~filters.bot,
 )
 async def alexaai(client: Client, message: Message):
+
+   # Check if the rate limit has been exceeded
+   global last_message
+   elapsed_time = time.time() - last_message
+   if elapsed_time < RATE_LIMIT:
+       await asyncio.sleep(RATE_LIMIT - elapsed_time)
+   last_message = time.time()
 
    chatdb = MongoClient(MONGO_URL)
    chatai = chatdb["Word"]["WordDb"]   
