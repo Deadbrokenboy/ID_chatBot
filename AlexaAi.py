@@ -3,6 +3,7 @@
 
 from pyrogram import Client, filters
 import asyncio
+import time
 from pyrogram.types import *
 from pymongo import MongoClient
 import requests
@@ -136,62 +137,70 @@ async def alexaai(client: Client, message: Message):
     & ~filters.bot,
 )
 async def alexastickerai(client: Client, message: Message):
+    chatdb = MongoClient(MONGO_URL)
+    chatai = chatdb["Word"]["WordDb"]
+    
+    # Check if message is not a reply
+    if not message.reply_to_message:
+        alexadb = MongoClient(MONGO_URL)
+        alexa = alexadb["AlexaDb"]["Alexa"] 
+        is_alexa = alexa.find_one({"chat_id": message.chat.id})
+        if not is_alexa:
+            await client.send_chat_action(message.chat.id, "typing")
+            K = []  
+            is_chat = chatai.find({"word": message.sticker.file_unique_id})      
+            k = chatai.find_one({"word": message.text})      
+            if k:           
+                for x in is_chat:
+                    K.append(x['text'])
+                hey = random.choice(K)
+                is_text = chatai.find_one({"text": hey})
+                Yo = is_text['check']
+                if Yo == "text":
+                    await message.reply_text(f"{hey}")
+                if not Yo == "text":
+                    # Send message with delay of 1 second
+                    await asyncio.sleep(1)
+                    await message.reply_sticker(f"{hey}")
+        else:
+            # Reply is for bot command
+            pass
+    
+    # Check if message is a reply from user
+    elif message.reply_to_message.from_user.id == (await client.get_me()).id:
+        alexadb = MongoClient(MONGO_URL)
+        alexa = alexadb["AlexaDb"]["Alexa"] 
+        is_alexa = alexa.find_one({"chat_id": message.chat.id})
+        if not is_alexa:                   
+            await client.send_chat_action(message.chat.id, "typing")
+            K = []  
+            is_chat = chatai.find({"word": message.sticker.file_unique_id})
+            k = chatai.find_one({"word": message.text})      
+            if k:       
+                for x in is_chat:
+                    K.append(x['text'])
+                hey = random.choice(K)
+                is_text = chatai.find_one({"text": hey})
+                Yo = is_text['check']
+                if Yo == "text":
+                    await message.reply_text(f"{hey}")
+                if not Yo == "text":
+                    # Send message with delay of 1 second
+                    await asyncio.sleep(1)
+                    await message.reply_sticker(f"{hey}")
+    else:
+        # Save new message for future use
+        if message.sticker:
+            is_chat = chatai.find_one({"word": message.reply_to_message.text, "id": message.sticker.file_unique_id})
+            if not is_chat:
+                chatai.insert_one({"word": message.reply_to_message.text, "text": message.sticker.file_id, "check": "sticker", "id": message.sticker.file_unique_id})
+        if message.text:                 
+            is_chat = chatai.find_one({"word": message.reply_to_message.text, "text": message.text})                 
+            if not is_chat:
+                chatai.insert_one({"word": message.reply_to_message.text, "text": message.text, "check": "none"})
 
-   chatdb = MongoClient(MONGO_URL)
-   chatai = chatdb["Word"]["WordDb"]   
 
-   if not message.reply_to_message:
-       alexadb = MongoClient(MONGO_URL)
-       alexa = alexadb["AlexaDb"]["Alexa"] 
-       is_alexa = alexa.find_one({"chat_id": message.chat.id})
-       if not is_alexa:
-           await client.send_chat_action(message.chat.id, "typing")
-           K = []  
-           is_chat = chatai.find({"word": message.sticker.file_unique_id})      
-           k = chatai.find_one({"word": message.text})      
-           if k:           
-               for x in is_chat:
-                   K.append(x['text'])
-               hey = random.choice(K)
-               is_text = chatai.find_one({"text": hey})
-               Yo = is_text['check']
-               if Yo == "text":
-                   await message.reply_text(f"{hey}")
-               if not Yo == "text":
-                   await message.reply_sticker(f"{hey}")
-   
-   if message.reply_to_message:
-       alexadb = MongoClient(MONGO_URL)
-       alexa = alexadb["AlexaDb"]["Alexa"] 
-       is_alexa = alexa.find_one({"chat_id": message.chat.id})
-       getme = await client.get_me()
-       user_id = getme.id
-       if message.reply_to_message.from_user.id == user_id: 
-           if not is_alexa:                    
-               await client.send_chat_action(message.chat.id, "typing")
-               K = []  
-               is_chat = chatai.find({"word": message.text})
-               k = chatai.find_one({"word": message.text})      
-               if k:           
-                   for x in is_chat:
-                       K.append(x['text'])
-                   hey = random.choice(K)
-                   is_text = chatai.find_one({"text": hey})
-                   Yo = is_text['check']
-                   if Yo == "text":
-                       await message.reply_text(f"{hey}")
-                   if not Yo == "text":
-                       await message.reply_sticker(f"{hey}")
-       if not message.reply_to_message.from_user.id == user_id:          
-           if message.text:
-               is_chat = chatai.find_one({"word": message.reply_to_message.sticker.file_unique_id, "text": message.text})
-               if not is_chat:
-                   toggle.insert_one({"word": message.reply_to_message.sticker.file_unique_id, "text": message.text, "check": "text"})
-           if message.sticker:                 
-               is_chat = chatai.find_one({"word": message.reply_to_message.sticker.file_unique_id, "text": message.sticker.file_id})                 
-               if not is_chat:
-                   chatai.insert_one({"word": message.reply_to_message.sticker.file_unique_id, "text": message.sticker.file_id, "check": "none"})    
-              
+
 
 
 @client.on_message(
